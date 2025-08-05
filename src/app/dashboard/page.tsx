@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Typography from "@/components/ui/typography";
 import { connect, getConnectionInfo } from "@/elastic";
+import { ChartLineLinear } from "../chart-linear";
 
 export const revalidate = 20;
 
@@ -42,6 +43,9 @@ export default async function Dashboard() {
             )}
           </CardContent>
         </Card>
+      </div>
+      <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
+        <ChartLineLinear />
       </div>
     </main>
   );
