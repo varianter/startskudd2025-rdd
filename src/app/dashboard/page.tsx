@@ -68,7 +68,7 @@ export default function Dashboard() {
                 <div>
                   <Typography variant="h2" className="mb-2">Sensor Statuses</Typography>
                   <div className="grid grid-cols-5 gap-2 w-max">
-                    {sensors.map((sensor, idx) => {
+                    {sensors.map((sensor) => {
                       const sensorNumber = parseInt(sensor.sensorId.replace("sensor-", ""), 10);
 
                       return (
