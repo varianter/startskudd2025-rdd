@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Typography from "@/components/ui/typography";
+import { useQuery } from "@tanstack/react-query";
+import { SensorDocument } from "@/types/elastic";
 
 
 const getStatusColor = (status: string) => {
@@ -20,35 +21,20 @@ const getStatusColor = (status: string) => {
 
 
 export default function Dashboard() {
+  const { data, isPending } = useQuery({
+    queryKey: ['sensors'],
+    queryFn: async () => {
+      const response = await fetch("/api/sensor-data");
+      return await response.json();
+    },
+    refetchInterval: 2000,
+  });
 
-  const [connectionStatus, setConnectionStatus] = useState("Disconnected");
-  const [clusterName, setClusterName] = useState("");
-  const [docCount, setDocCount] = useState<number | null>(null);
-  const [sensors, setSensors] = useState<any[]>([]);
+  const isConnected = !!data;
+  const sensors: SensorDocument[] = data?.sensors;
+  const clusterName = data?.clusterName;
+  const docCount = data?.docCount;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("/api/sensor-data");
-        const data = await res.json();
-
-        setConnectionStatus("Connected");
-        setClusterName(data.clusterName);
-        setDocCount(data.docCount);
-        setSensors(data.sensors);
-
-      } catch (err) {
-        console.error(err);
-        setConnectionStatus("Disconnected");
-      }
-    };
-
-    fetchData();
-    const interval = setInterval(fetchData, 2000); // refresh every 2s
-    return () => clearInterval(interval);
-  }, []);
-
-  
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
       <Typography variant="h1">Dashboard</Typography>
@@ -58,15 +44,18 @@ export default function Dashboard() {
           <CardHeader>
             <CardTitle className="gap-2 flex">
               Connection status
-              {connectionStatus === "Connected" ? (
-                <Badge variant="default">Connected</Badge>
-              ) : (
-                <Badge variant="destructive">Not connected</Badge>
-              )}
+              {isPending
+                ? (<Badge variant="secondary">Connecting...</Badge>)
+                : (
+                  isConnected
+                    ? <Badge variant="default">Connected</Badge>
+                    : <Badge variant="destructive">Not connected</Badge>
+                )
+              }
             </CardTitle>
           </CardHeader>
           <CardContent className="grid gap-8">
-            {connectionStatus === "Connected" ? (
+            {isConnected ? (
               <>
                 <p>
                   Connected to cluster{" "}
@@ -75,7 +64,7 @@ export default function Dashboard() {
                   </code>
                   . Counting {docCount} documents
                 </p>
-                
+
                 <div>
                   <Typography variant="h2" className="mb-2">Sensor Statuses</Typography>
                   <div className="grid grid-cols-5 gap-2 w-max">
@@ -84,7 +73,7 @@ export default function Dashboard() {
 
                       return (
                         <div
-                          key={sensor.sensorId || idx}
+                          key={sensorNumber}
                           className={`relative w-20 h-20 flex items-center justify-center ${getStatusColor(sensor.status)} rounded-sm`}
                           title={`${sensor.sensorId}: ${sensor.status}`}
                         >
