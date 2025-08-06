@@ -14,5 +14,6 @@ export interface SensorDocument {
   status: string;
   readingDate: string;
   sensor: Sensor;
-  deltaMovementInMm: number;
+  deltaMovementInMm?: number;
+  readingPlacement?: SensorPosition;
 }
