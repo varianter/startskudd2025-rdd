@@ -5,6 +5,7 @@ import Typography from "@/components/ui/typography";
 import { useQuery } from "@tanstack/react-query";
 import { SensorDocument } from "@/types/elastic";
 
+export const revalidate = 20;
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -18,8 +19,6 @@ const getStatusColor = (status: string) => {
       return "bg-gray-400";
   }
 };
-
-export const revalidate = 20;
 
 export default function Dashboard() {
   const { data, isPending } = useQuery({
