@@ -12,19 +12,18 @@ export async function GET() {
     const docCountResult = await client.count({ index: INDEX_NAME });
     const docCount = docCountResult.count;
 
-    let sensors: any[] = [];
-
     // Get sensor statuses (latest 20 by readingDate)
     const statusResponse = await client.search({
       index: INDEX_NAME,
       query: { match_all: {} },
       size: 20,
+      collapse: { field: "sensorId" },
       sort: [
         { readingDate: { order: "desc" } },
       ]
     });
-    
-    sensors = statusResponse.hits.hits
+
+    const sensors = statusResponse.hits.hits
       .map(hit => hit._source as SensorDocument)
       .sort((a, b) => {
         const numA = parseInt(a.sensorId.replace("sensor-", ""), 10);
