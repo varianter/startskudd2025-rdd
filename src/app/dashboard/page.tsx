@@ -4,20 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Typography from "@/components/ui/typography";
 import { useQuery } from "@tanstack/react-query";
 import { SensorDocument } from "@/types/elastic";
-
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "ON":
-      return "bg-green-500";
-    case "OFF":
-      return "bg-black";
-    case "ERROR":
-      return "bg-red-500";
-    default:
-      return "bg-gray-400";
-  }
-};
+import { SensorTable } from "@/components/sensor";
 
 
 export default function Dashboard() {
@@ -67,23 +54,9 @@ export default function Dashboard() {
 
                 <div>
                   <Typography variant="h2" className="mb-2">Sensor Statuses</Typography>
-                  <div className="grid grid-cols-5 gap-2 w-max">
-                    {sensors.map((sensor) => {
-                      const sensorNumber = parseInt(sensor.sensorId.replace("sensor-", ""), 10);
 
-                      return (
-                        <div
-                          key={sensorNumber}
-                          className={`relative w-20 h-20 flex items-center justify-center ${getStatusColor(sensor.status)} rounded-sm`}
-                          title={`${sensor.sensorId}: ${sensor.status}`}
-                        >
-                          <span className="absolute text-xs text-white font-bold">
-                            {sensorNumber}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  <SensorTable sensors={sensors} />
+
                 </div>
 
                 <div className="space-y-2">
