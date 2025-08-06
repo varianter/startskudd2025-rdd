@@ -8,7 +8,7 @@ export default function Dashboard() {
         <Typography variant="h1">Not found</Typography>
         <BombIcon width="100" height="100" className="block m-auto" />
         <p>
-          Chucks. We tried searching under every rock, but we couldn't find the
+          Chucks. We tried searching under every rock, but we couldn&apos;t find the
           page you are looking for...
         </p>
       </div>
