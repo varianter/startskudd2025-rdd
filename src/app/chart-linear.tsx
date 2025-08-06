@@ -29,22 +29,30 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function ChartLineLinear({ sensordata }: { sensordata: SensorDocument[] }) {
-  const firstSensorId = sensordata[0]?.sensorId;
-  const latest = sensordata.find(d => d.sensorId === firstSensorId);
+  // Get all unique sensor IDs
+  const sensorIds = Array.from(new Set(sensordata.map(d => d.sensorId)));
+  // State for selected sensor
+  const [selectedSensorId, setSelectedSensorId] = useState(sensorIds[0] ?? "");
 
-  // State to accumulate readings
+  // Find the latest reading for the selected sensor
+  const latest = sensordata.find(d => d.sensorId === selectedSensorId);
+
+  // State to accumulate readings for the selected sensor
   const [history, setHistory] = useState<{ readingDate: string; deltaMovementInMm: number }[]>([]);
 
   useEffect(() => {
     if (!latest) return;
     setHistory(prev => {
-      // Add new reading
       const updated = [...prev, { readingDate: latest.readingDate, deltaMovementInMm: latest.deltaMovementInMm }];
-      // Remove readings older than 10 minutes
       const tenMinutesAgo = Date.now() - 10 * 60 * 1000;
       return updated.filter(d => new Date(d.readingDate).getTime() >= tenMinutesAgo);
     });
-  }, [latest?.readingDate, latest?.deltaMovementInMm]);
+  }, [latest?.readingDate, latest?.deltaMovementInMm, selectedSensorId]);
+
+  // Reset history when changing sensor
+  useEffect(() => {
+    setHistory([]);
+  }, [selectedSensorId]);
 
   return (
     <Card>
@@ -53,6 +61,19 @@ export function ChartLineLinear({ sensordata }: { sensordata: SensorDocument[] }
         <CardDescription>The last 10 minutes</CardDescription>
       </CardHeader>
       <CardContent>
+         <div className="mb-4">
+          <label htmlFor="sensor-select" className="mr-2 font-medium">Sensor:</label>
+          <select
+            id="sensor-select"
+            value={selectedSensorId}
+            onChange={e => setSelectedSensorId(e.target.value)}
+            className="border rounded px-2 py-1"
+          >
+            {sensorIds.map(id => (
+              <option key={id} value={id}>{id}</option>
+            ))}
+          </select>
+        </div>
         <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
@@ -73,7 +94,7 @@ export function ChartLineLinear({ sensordata }: { sensordata: SensorDocument[] }
                 new Date(value).toLocaleTimeString([], { second: '2-digit' })
             }
             >
-                <Label value="Minutt" offset={-15} position="insideBottom" />
+                <Label value="Time" offset={-15} position="insideBottom" />
             </XAxis>
             <YAxis
                 tickLine={false}
@@ -100,7 +121,7 @@ export function ChartLineLinear({ sensordata }: { sensordata: SensorDocument[] }
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="text-muted-foreground leading-none">
-          Shows movement for sensor X the last 10 minutes.
+          Shows movement for {selectedSensorId} the last 10 minutes.
         </div>
       </CardFooter>
     </Card>
