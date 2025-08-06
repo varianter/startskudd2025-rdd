@@ -1,6 +1,5 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { CartesianGrid, Line, LineChart, XAxis, YAxis, ReferenceLine, Label } from "recharts"
 
 import {
@@ -17,21 +16,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { SensorDocument } from "@/types/elastic"
+import { useState, useEffect } from "react";
 
 export const description = "A linear line chart"
-
-const chartData = [
-  { time: "1", sensor: 2 },
-  { time: "2", sensor: 1 },
-  { time: "3", sensor: 7 },
-  { time: "4", sensor: 4 },
-  { time: "5", sensor: 3 },
-  { time: "6", sensor: 9 },
-  { time: "7", sensor: 2.3 },
-  { time: "8", sensor: 3.5 },
-  { time: "9", sensor: 4 },
-  { time: "10", sensor: 2 },
-]
 
 const chartConfig = {
   sensor: {
@@ -40,18 +28,35 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function ChartLineLinear() {
+export function ChartLineLinear({ sensordata }: { sensordata: SensorDocument[] }) {
+  const firstSensorId = sensordata[0]?.sensorId;
+  const latest = sensordata.find(d => d.sensorId === firstSensorId);
+
+  // State to accumulate readings
+  const [history, setHistory] = useState<{ readingDate: string; deltaMovementInMm: number }[]>([]);
+
+  useEffect(() => {
+    if (!latest) return;
+    setHistory(prev => {
+      // Add new reading
+      const updated = [...prev, { readingDate: latest.readingDate, deltaMovementInMm: latest.deltaMovementInMm }];
+      // Remove readings older than 10 minutes
+      const tenMinutesAgo = Date.now() - 10 * 60 * 1000;
+      return updated.filter(d => new Date(d.readingDate).getTime() >= tenMinutesAgo);
+    });
+  }, [latest?.readingDate, latest?.deltaMovementInMm]);
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sanntidsvisning av sensordata</CardTitle>
-        <CardDescription>De siste 10 minutt</CardDescription>
+        <CardTitle>Sensor data in true time</CardTitle>
+        <CardDescription>The last 10 minutes</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={history}
             margin={{
               left: 12,
               right: 12,
@@ -60,11 +65,13 @@ export function ChartLineLinear() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="time"
+              dataKey="readingDate"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) =>
+                new Date(value).toLocaleTimeString([], { second: '2-digit' })
+            }
             >
                 <Label value="Minutt" offset={-15} position="insideBottom" />
             </XAxis>
@@ -72,6 +79,7 @@ export function ChartLineLinear() {
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8} 
+                domain={[0, 10]}
             >
                 <Label value="Millimeter" offset={0} position="insideLeft" angle={-90} />
             </YAxis>
@@ -81,7 +89,7 @@ export function ChartLineLinear() {
               content={<ChartTooltipContent hideLabel />}
             />
             <Line
-              dataKey="sensor"
+              dataKey="deltaMovementInMm"
               type="natural"
               stroke={`hsl(var(--chart-2))`}
               strokeWidth={2}
@@ -92,9 +100,10 @@ export function ChartLineLinear() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="text-muted-foreground leading-none">
-          Viser maks-bevegelse for sensor X i løpet av de siste 10 minuttene.
+          Shows movement for sensor X the last 10 minutes.
         </div>
       </CardFooter>
     </Card>
   )
 }
+

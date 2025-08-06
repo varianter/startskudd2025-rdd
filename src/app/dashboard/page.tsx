@@ -110,7 +110,7 @@ export default function Dashboard() {
         </Card>
       </div>
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
-        <ChartLineLinear />
+        <ChartLineLinear sensordata={sensors} />
       </div>
     </main>
   );
