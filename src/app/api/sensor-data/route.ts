@@ -1,6 +1,8 @@
 import { connect, INDEX_NAME } from "@/elastic";
 import type { SensorDocument } from "@/types/elastic";
 
+export const revalidate = 0;
+
 export async function GET() {
   try {
     const client = await connect();
