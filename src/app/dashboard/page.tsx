@@ -19,6 +19,7 @@ const getStatusColor = (status: string) => {
   }
 };
 
+export const revalidate = 20;
 
 export default function Dashboard() {
   const { data, isPending } = useQuery({
