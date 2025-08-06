@@ -36,7 +36,7 @@ export default function Dashboard() {
         <Card x-chunk="dashboard-01-chunk-5">
           <CardHeader>
             <CardTitle className="gap-2 flex">
-              Sensor Statuses
+              Sensors
               {isFetching && <Badge variant="secondary">Updating...</Badge>}
               {isError && <Badge variant="destructive">Error fetching data</Badge>}
             </CardTitle>
