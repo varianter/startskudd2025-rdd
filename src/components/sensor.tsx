@@ -1,6 +1,7 @@
 import { SensorDocument } from "@/types/elastic";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 function getStatusColor(status: string) {
   switch (status) {
@@ -25,8 +26,9 @@ export function SensorTable({ sensors }: { sensors: SensorDocument[] }) {
       <TableRow>
         <TableHead>Sensor</TableHead>
         <TableHead>Status</TableHead>
-        <TableHead>Siste måling</TableHead>
-        <TableHead>Posisjon</TableHead>
+        <TableHead>Position</TableHead>
+        <TableHead>Last reading</TableHead>
+        <TableHead>Updated</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -41,8 +43,9 @@ export function SensorTable({ sensors }: { sensors: SensorDocument[] }) {
               {sensor.status}
             </div>
           </TableCell>
-          <TableCell>{sensor.deltaMovementInMm ? `${sensor.deltaMovementInMm.toPrecision(2)} mm` : ''}</TableCell>
           <TableCell>{sensor.sensor.placement.x}, {sensor.sensor.placement.y}, {sensor.sensor.placement.depthInMeter}</TableCell>
+          <TableCell>{sensor.deltaMovementInMm ? `${sensor.deltaMovementInMm.toPrecision(2)} mm` : ''}</TableCell>
+          <TableCell>{format(sensor.readingDate, 'PPpp')}</TableCell>
         </TableRow>
       ))}
     </TableBody>
