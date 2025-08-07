@@ -222,8 +222,8 @@ export function ChartLineLinear({
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="text-muted-foreground leading-none">
           Showing {mode === "movement" ? "delta movement" : "real-time depth"} for {" "}
-          <strong>{selectedSensorId}</strong>. The red line shows the threshold of 5mm movement, which leads to a warning.
-           {mode === "movement" ? "" : " The black line indicates the original placement depth of the sensor."}
+          <strong>{selectedSensorId}</strong>.
+           {mode === "movement" ? " The red line shows the threshold of 5mm movement, which leads to a warning." : " The black line indicates the original placement depth of the sensor."}
         </div>
       </CardFooter>
     </Card>
