@@ -38,7 +38,15 @@ export async function GET() {
           },
 
           // movement threshold
-          { range: { deltaMovementInMm: { gt: 5.0 } } },
+          {
+            bool: {
+              should: [
+                // Must match one of the following (so, between -5.0 and 5.0)
+                { range: { deltaMovementInMm: { gt: 5.0 } } },
+                { range: { deltaMovementInMm: { lt: -5.0 } } }
+              ]
+            }
+          }
         ]
       }
     },
