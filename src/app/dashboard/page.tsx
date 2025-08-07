@@ -7,11 +7,11 @@ import { SensorDocument } from "@/types/elastic";
 import { connect, getConnectionInfo } from "@/elastic";
 import { ChartLineLinear } from "../chart-linear";
 import { SensorTable } from "@/components/sensor";
-import { useEffect } from "react";
+import RockSlideDetection from "@/components/detection";
 
 
 export default function Dashboard() {
-  const { data, isFetching, isError } = useQuery({
+  const { data: sensorsData, isFetching: isSensorsFetching, isError } = useQuery({
     queryKey: ['sensors'],
     queryFn: async () => {
       const response = await fetch("/api/sensor-data");
@@ -21,14 +21,17 @@ export default function Dashboard() {
     refetchInterval: 5000,
   });
 
-  const isConnected = !!data;
-  const sensors: SensorDocument[] = data?.sensors;
+  const isConnected = !!sensorsData;
+  const sensors: SensorDocument[] = sensorsData?.sensors;
 
-  useEffect(() => {
-    if (sensors) {
-      console.debug(sensors); // TODO: remove
-    }
-  }, [sensors]);
+  const { data: rockslideData, isPending: isRockslidePending } = useQuery({
+    queryKey: ['rockslide'],
+    queryFn: async () => {
+      const response = await fetch("/api/rockslide-detection");
+      return await response.json();
+    },
+    refetchInterval: 60_000,
+  });
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -39,13 +42,16 @@ export default function Dashboard() {
           <CardHeader>
             <CardTitle className="gap-2 flex">
               Sensors
-              {isFetching && <Badge variant="secondary">Updating...</Badge>}
+              {isSensorsFetching && <Badge variant="secondary">Updating...</Badge>}
               {isError && <Badge variant="destructive">Error fetching data</Badge>}
             </CardTitle>
           </CardHeader>
           <CardContent className="grid gap-8">
             {isConnected
-              ? <SensorTable sensors={sensors}/>
+              ? <>
+                <RockSlideDetection rockslideData={rockslideData}/>
+                <SensorTable sensors={sensors}/>
+              </>
               : <p>Not connected</p>}
           </CardContent>
         </Card>

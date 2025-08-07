@@ -1,6 +1,7 @@
 import { SensorDocument } from "@/types/elastic";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
+import { formatSensorId } from "@/lib/utils";
 
 function getRowStyle(status: string) {
   switch (status) {
@@ -11,10 +12,6 @@ function getRowStyle(status: string) {
     default:
       return "";
   }
-}
-
-function capitalizeFirstLetter(string: string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export function SensorTable({ sensors }: { sensors: SensorDocument[] }) {
@@ -32,7 +29,7 @@ export function SensorTable({ sensors }: { sensors: SensorDocument[] }) {
       {sensors.map((sensor) => (
         <TableRow key={sensor.sensorId} className={getRowStyle(sensor.status)}>
           <TableCell>
-            {capitalizeFirstLetter(sensor.sensorId.replace("-", " "))}
+            {formatSensorId(sensor.sensorId)}
           </TableCell>
           <TableCell>
             <div className="flex items-center gap-1">

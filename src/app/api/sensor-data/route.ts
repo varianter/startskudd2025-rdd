@@ -16,7 +16,7 @@ export async function GET() {
     const statusResponse = await client.search({
       index: INDEX_NAME,
       query: { match_all: {} },
-      size: 20,
+      size: 300,
       collapse: { field: "sensorId" },
       sort: [
         { readingDate: { order: "desc" } },
