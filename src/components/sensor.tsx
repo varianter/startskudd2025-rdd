@@ -33,7 +33,7 @@ export function SensorTable({ sensors, rockslideData }: {
         <TableHead>Position</TableHead>
         <TableHead>Last reading</TableHead>
         <TableHead>Updated</TableHead>
-        <TableHead>Warnings</TableHead>
+        <TableHead>Warnings past 24h</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
