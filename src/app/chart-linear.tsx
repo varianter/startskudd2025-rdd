@@ -30,7 +30,9 @@ const chartConfig = {
 
 export function ChartLineLinear({ sensordata }: { sensordata: Record<string, SensorDocument[]> }) {
 
-  const sensorIds = Object.keys(sensordata);
+    const sensorIds = Object.keys(sensordata).sort(
+    new Intl.Collator(undefined, { numeric: true, sensitivity: "base" }).compare
+  );
   const [selectedSensorId, setSelectedSensorId] = useState(sensorIds[0] ?? "");
 
   useEffect(() => {
@@ -74,18 +76,18 @@ export function ChartLineLinear({ sensordata }: { sensordata: Record<string, Sen
               axisLine={false}
               tickMargin={8}
               tickFormatter={(value) =>
-                new Date(value).toLocaleTimeString([], { second: '2-digit' })
+                new Date(value).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second: '2-digit' })
               }
             >
-              <Label value="Time" offset={-15} position="insideBottom" />
+              <Label value="HH:MM:SS" offset={-15} position="insideBottom" />
             </XAxis>
             <YAxis
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              domain={[0, 10]}
+              domain={[0, 6]}
             >
-              <Label value="Millimeter" offset={0} position="insideLeft" angle={-90} />
+              <Label value="Mm" offset={0} position="insideLeft" angle={-90} />
             </YAxis>
             <ReferenceLine y={5} stroke="red" strokeWidth={2} />
             <ChartTooltip
@@ -94,6 +96,7 @@ export function ChartLineLinear({ sensordata }: { sensordata: Record<string, Sen
             />
             <Line
               dataKey="deltaMovementInMm"
+              name="Movement in mm: "
               type="natural"
               stroke={`hsl(var(--chart-2))`}
               strokeWidth={2}
