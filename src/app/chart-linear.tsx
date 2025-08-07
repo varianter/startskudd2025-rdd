@@ -48,7 +48,7 @@ export function ChartLineLinear({
     new Intl.Collator(undefined, { numeric: true, sensitivity: "base" }).compare
   )
   const [selectedSensorId, setSelectedSensorId] = useState(sensorIds[0] ?? "")
-  const [mode, setMode] = useState<ChartMode>("movement")
+  const [mode, setMode] = useState<ChartMode>("depth")
 
   useEffect(() => {
     if (sensorIds.length && !sensorIds.includes(selectedSensorId)) {
@@ -91,7 +91,7 @@ export function ChartLineLinear({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sensor data in true time</CardTitle>
+        <CardTitle>Sensor data in real time</CardTitle>
         <CardDescription>The last 10 minutes</CardDescription>
       </CardHeader>
       <CardContent>
@@ -119,7 +119,7 @@ export function ChartLineLinear({
               isActive={mode === "movement"}
               onClick={() => setMode("movement")}
             >
-              Delta movement (mm)
+              Movement (mm)
             </ToggleGroupItem>
             <ToggleGroupItem
               value="depth"
@@ -208,8 +208,9 @@ export function ChartLineLinear({
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="text-muted-foreground leading-none">
-          Showing {mode === "movement" ? "delta movement" : "realtime depth"} for sensor{" "}
-          <strong>{selectedSensorId}</strong>.
+          Showing {mode === "movement" ? "delta movement" : "realtime depth"} for {" "}
+          <strong>{selectedSensorId}</strong>. The red line shows the threshold of 5mm movement, which leads to a warning.
+           {mode === "movement" ? "" : " The black line indicates the original placement depth of the sensor."}
         </div>
       </CardFooter>
     </Card>
