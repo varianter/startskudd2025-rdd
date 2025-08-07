@@ -47,23 +47,21 @@ export default function Dashboard() {
         {rockslideData && sensors && <RockSlideDetection rockslideData={rockslideData} sensorCount={sensors.length}/>}
       </div>
 
-      <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
-        <div className="flex flex-col gap-4">
-          <Card x-chunk="dashboard-01-chunk-5">
-            <CardHeader>
-              <CardTitle className="gap-2 flex">
-                Sensors
-                {isSensorsFetching && <Badge variant="secondary">Updating...</Badge>}
-                {isError && <Badge variant="destructive">Error fetching data</Badge>}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-8">
-              {isConnected
-                ? <SensorTable sensors={sensors}/>
-                : <p>Not connected</p>}
-            </CardContent>
-          </Card>
-        </div>
+      <div className="grid gap-4 md:gap-8 lg:grid-cols-4">
+        <Card x-chunk="dashboard-01-chunk-5" className="col-span-3">
+          <CardHeader>
+            <CardTitle className="gap-2 flex">
+              Sensors
+              {isSensorsFetching && <Badge variant="secondary">Updating...</Badge>}
+              {isError && <Badge variant="destructive">Error fetching data</Badge>}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-8">
+            {isConnected
+              ? <SensorTable sensors={sensors} rockslideData={rockslideData}/>
+              : <p>Not connected</p>}
+          </CardContent>
+        </Card>
       </div>
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
         {isConnected ? 

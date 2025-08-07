@@ -17,3 +17,13 @@ export interface SensorDocument {
   deltaMovementInMm?: number;
   readingPlacement?: SensorPosition;
 }
+
+export interface RockSlideData {
+  sensorId: string;
+  dangerCount: number;
+}
+
+export interface RockSlideResponse {
+  counts: RockSlideData[],
+  flaggedSensors: string[];
+}
