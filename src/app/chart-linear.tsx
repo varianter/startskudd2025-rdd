@@ -171,6 +171,7 @@ export function ChartLineLinear({
 
             {/* Main data line */}
             <Line
+              name="Reading depth (m)"
               dataKey={yAxisProps.dataKey}
               name="Movement in mm: "
               type="natural"
@@ -182,20 +183,33 @@ export function ChartLineLinear({
 
             {/* Red threshold line for delta movement */}
             {mode === "movement" && (
-              <Line
-                type="linear"
-                dataKey={() => 5}
-                stroke="red"
-                strokeWidth={2}
-                dot={false}
-                isAnimationActive={false}
-              />
+              <>
+                <Line
+                  type="linear"
+                  name="Upper threshold (m)"
+                  dataKey={() => 5.0}
+                  stroke="red"
+                  strokeWidth={2}
+                  dot={false}
+                  isAnimationActive={false}
+                />
+                <Line
+                  type="linear"
+                  name="Lower threshold (m)"
+                  dataKey={() => -5.0}
+                  stroke="red"
+                  strokeWidth={2}
+                  dot={false}
+                  isAnimationActive={false}
+                />
+              </>
             )}
 
             {/* Black line for original placement in depth mode */}
             {mode === "depth" && history.length > 0 && (
               <Line
                 type="linear"
+                name="Sensor depth (m)"
                 dataKey={() => history[0].sensor.placement.depthInMeter}
                 stroke="black"
                 strokeWidth={2}
