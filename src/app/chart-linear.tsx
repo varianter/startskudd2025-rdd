@@ -28,31 +28,18 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function ChartLineLinear({ sensordata }: { sensordata: SensorDocument[] }) {
-  // Get all unique sensor IDs
-  const sensorIds = Array.from(new Set(sensordata.map(d => d.sensorId)));
-  // State for selected sensor
+export function ChartLineLinear({ sensordata }: { sensordata: Record<string, SensorDocument[]> }) {
+
+  const sensorIds = Object.keys(sensordata);
   const [selectedSensorId, setSelectedSensorId] = useState(sensorIds[0] ?? "");
 
-  // Find the latest reading for the selected sensor
-  const latest = sensordata.find(d => d.sensorId === selectedSensorId);
-
-  // State to accumulate readings for the selected sensor
-  const [history, setHistory] = useState<{ readingDate: string; deltaMovementInMm: number }[]>([]);
-
   useEffect(() => {
-    if (!latest) return;
-    setHistory(prev => {
-      const updated = [...prev, { readingDate: latest.readingDate, deltaMovementInMm: latest.deltaMovementInMm }];
-      const tenMinutesAgo = Date.now() - 10 * 60 * 1000;
-      return updated.filter(d => new Date(d.readingDate).getTime() >= tenMinutesAgo);
-    });
-  }, [latest?.readingDate, latest?.deltaMovementInMm, selectedSensorId]);
+    if (sensorIds.length && !sensorIds.includes(selectedSensorId)) {
+      setSelectedSensorId(sensorIds[0]);
+    }
+  }, [sensorIds.join(","), selectedSensorId]);
 
-  // Reset history when changing sensor
-  useEffect(() => {
-    setHistory([]);
-  }, [selectedSensorId]);
+  const history = sensordata[selectedSensorId] ?? [];
 
   return (
     <Card>
@@ -61,7 +48,7 @@ export function ChartLineLinear({ sensordata }: { sensordata: SensorDocument[] }
         <CardDescription>The last 10 minutes</CardDescription>
       </CardHeader>
       <CardContent>
-         <div className="mb-4">
+        <div className="mb-4">
           <label htmlFor="sensor-select" className="mr-2 font-medium">Sensor:</label>
           <select
             id="sensor-select"
@@ -78,11 +65,7 @@ export function ChartLineLinear({ sensordata }: { sensordata: SensorDocument[] }
           <LineChart
             accessibilityLayer
             data={history}
-            margin={{
-              left: 12,
-              right: 12,
-              bottom: 32, 
-            }}
+            margin={{ left: 12, right: 12, bottom: 32 }}
           >
             <CartesianGrid vertical={false} />
             <XAxis
@@ -92,17 +75,17 @@ export function ChartLineLinear({ sensordata }: { sensordata: SensorDocument[] }
               tickMargin={8}
               tickFormatter={(value) =>
                 new Date(value).toLocaleTimeString([], { second: '2-digit' })
-            }
+              }
             >
-                <Label value="Time" offset={-15} position="insideBottom" />
+              <Label value="Time" offset={-15} position="insideBottom" />
             </XAxis>
             <YAxis
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8} 
-                domain={[0, 10]}
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              domain={[0, 10]}
             >
-                <Label value="Millimeter" offset={0} position="insideLeft" angle={-90} />
+              <Label value="Millimeter" offset={0} position="insideLeft" angle={-90} />
             </YAxis>
             <ReferenceLine y={5} stroke="red" strokeWidth={2} />
             <ChartTooltip
@@ -115,6 +98,7 @@ export function ChartLineLinear({ sensordata }: { sensordata: SensorDocument[] }
               stroke={`hsl(var(--chart-2))`}
               strokeWidth={2}
               dot={false}
+              isAnimationActive={false}
             />
           </LineChart>
         </ChartContainer>
@@ -125,6 +109,7 @@ export function ChartLineLinear({ sensordata }: { sensordata: SensorDocument[] }
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }
+
 
