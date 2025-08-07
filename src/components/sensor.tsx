@@ -38,7 +38,7 @@ export function SensorTable({ sensors }: { sensors: SensorDocument[] }) {
           </TableCell>
           <TableCell>{sensor.sensor.placement.x}, {sensor.sensor.placement.y}, {sensor.sensor.placement.depthInMeter}</TableCell>
           <TableCell>{sensor.deltaMovementInMm ? `${sensor.deltaMovementInMm.toPrecision(2)} mm` : ''}</TableCell>
-          <TableCell>{format(sensor.readingDate, 'PPpp')}</TableCell>
+          <TableCell>{format(sensor.readingDate, 'HH:mm:ss')}</TableCell>
         </TableRow>
       ))}
     </TableBody>
