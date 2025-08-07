@@ -171,9 +171,8 @@ export function ChartLineLinear({
 
             {/* Main data line */}
             <Line
-              name="Reading depth (m)"
               dataKey={yAxisProps.dataKey}
-              name="Movement in mm: "
+              name={mode === "movement" ? "Movement in mm: " : "Reading depth (m)"}
               type="natural"
               stroke={`hsl(var(--chart-2))`}
               strokeWidth={2}
