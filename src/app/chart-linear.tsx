@@ -208,7 +208,7 @@ export function ChartLineLinear({
             {mode === "depth" && history.length > 0 && (
               <Line
                 type="linear"
-                name="Sensor depth (m)"
+                name="Original depth (m)"
                 dataKey={() => history[0].sensor.placement.depthInMeter}
                 stroke="black"
                 strokeWidth={2}
