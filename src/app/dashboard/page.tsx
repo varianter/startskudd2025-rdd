@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Typography from "@/components/ui/typography";
 import { useQuery } from "@tanstack/react-query";
 import { SensorDocument } from "@/types/elastic";
+import RockSlideDetection from "@/components/detection";
 
 
 const getStatusColor = (status: string) => {
@@ -21,19 +22,28 @@ const getStatusColor = (status: string) => {
 
 
 export default function Dashboard() {
-  const { data, isPending } = useQuery({
+  const { data: sensorsData, isPending: isSensorsPending } = useQuery({
     queryKey: ['sensors'],
     queryFn: async () => {
       const response = await fetch("/api/sensor-data");
       return await response.json();
     },
-    refetchInterval: 2000,
+    refetchInterval: 2_000,
   });
 
-  const isConnected = !!data;
-  const sensors: SensorDocument[] = data?.sensors;
-  const clusterName = data?.clusterName;
-  const docCount = data?.docCount;
+  const { data: rockslideData, isPending: isRockslidePending } = useQuery({
+    queryKey: ['rockslide'],
+    queryFn: async () => {
+      const response = await fetch("/api/rockslide-detection");
+      return await response.json();
+    },
+    refetchInterval: 60_000,
+  });
+
+  const isConnected = !!sensorsData;
+  const sensors: SensorDocument[] = sensorsData?.sensors;
+  const clusterName = sensorsData?.clusterName;
+  const docCount = sensorsData?.docCount;
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -44,7 +54,7 @@ export default function Dashboard() {
           <CardHeader>
             <CardTitle className="gap-2 flex">
               Connection status
-              {isPending
+              {isSensorsPending
                 ? (<Badge variant="secondary">Connecting...</Badge>)
                 : (
                   isConnected
@@ -64,6 +74,8 @@ export default function Dashboard() {
                   </code>
                   . Counting {docCount} documents
                 </p>
+
+                <RockSlideDetection rockslideData={rockslideData} />
 
                 <div>
                   <Typography variant="h2" className="mb-2">Sensor Statuses</Typography>
