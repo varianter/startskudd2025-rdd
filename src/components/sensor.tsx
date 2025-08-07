@@ -33,7 +33,7 @@ export function SensorTable({ sensors, rockslideData }: {
         <TableHead>Position</TableHead>
         <TableHead>Last reading</TableHead>
         <TableHead>Updated</TableHead>
-        <TableHead>Warnings</TableHead>
+        <TableHead>Warnings past 24h</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -51,7 +51,7 @@ export function SensorTable({ sensors, rockslideData }: {
                   {sensor.status}
                 </div>
               </TableCell>
-              <TableCell>{sensor.sensor.placement.x}, {sensor.sensor.placement.y}, {sensor.sensor.placement.depthInMeter}</TableCell>
+              <TableCell>({sensor.sensor.placement.x}, {sensor.sensor.placement.y}, {sensor.sensor.placement.depthInMeter})</TableCell>
               <TableCell>{sensor.deltaMovementInMm ? `${sensor.deltaMovementInMm.toPrecision(2)} mm` : ''}</TableCell>
               <TableCell>{format(sensor.readingDate, 'HH:mm:ss')}</TableCell>
               <TableCell>
