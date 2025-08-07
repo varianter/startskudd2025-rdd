@@ -7,7 +7,10 @@ export default function RockSlideDetection({ rockslideData, sensorCount }: {
   sensorCount: number
 }) {
 
-  const timestamp = useMemo(() => new Date().getTime(), []); // TODO: replace with actual warning time
+  const timestamp = useMemo(() => {
+    if (!rockslideData) return null;
+    return new Date().getTime()
+  }, [rockslideData]); // TODO: replace with actual warning time
 
   return (
     <div className="max-w-full w-[500px]">
@@ -24,7 +27,7 @@ export default function RockSlideDetection({ rockslideData, sensorCount }: {
             Warnings from {rockslideData.flaggedSensors.length} out of {sensorCount} sensors
           </p>
           <p className="text-muted-foreground">
-            {format(timestamp, 'HH:mm:ss')}
+            {timestamp && format(timestamp, 'HH:mm:ss')}
           </p>
         </div>
       ) : null}
