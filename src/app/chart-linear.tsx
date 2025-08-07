@@ -44,9 +44,11 @@ export function ChartLineLinear({
 }: {
   sensordata: Record<string, SensorDocument[]>
 }) {
-  const sensorIds = Object.keys(sensordata)
+    const sensorIds = Object.keys(sensordata).sort(
+    new Intl.Collator(undefined, { numeric: true, sensitivity: "base" }).compare
+  )
   const [selectedSensorId, setSelectedSensorId] = useState(sensorIds[0] ?? "")
-  const [mode, setMode] = useState<ChartMode>("movement")
+  const [mode, setMode] = useState<ChartMode>("depth")
 
   useEffect(() => {
     if (sensorIds.length && !sensorIds.includes(selectedSensorId)) {
@@ -82,14 +84,14 @@ export function ChartLineLinear({
         }
       : {
           dataKey: "realtimeDepthInMeter",
-          yLabel: "Realtime depth (m)",
+          yLabel: "Real-time depth (m)",
           domain: ["auto", "auto"],
         }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sensor data in true time</CardTitle>
+        <CardTitle>Sensor data in real time</CardTitle>
         <CardDescription>The last 10 minutes</CardDescription>
       </CardHeader>
       <CardContent>
@@ -117,14 +119,14 @@ export function ChartLineLinear({
               isActive={mode === "movement"}
               onClick={() => setMode("movement")}
             >
-              Delta movement (mm)
+              Movement (mm)
             </ToggleGroupItem>
             <ToggleGroupItem
               value="depth"
               isActive={mode === "depth"}
               onClick={() => setMode("depth")}
             >
-              Realtime depth (m)
+              Real-time depth (m)
             </ToggleGroupItem>
           </ToggleGroup>
 
@@ -143,10 +145,10 @@ export function ChartLineLinear({
               axisLine={false}
               tickMargin={8}
               tickFormatter={(value) =>
-                new Date(value).toLocaleTimeString([], { second: "2-digit" })
+                new Date(value).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second: '2-digit' })
               }
             >
-              <Label value="Time" offset={-15} position="insideBottom" />
+              <Label value="HH:MM:SS" offset={-15} position="insideBottom" />
             </XAxis>
             <YAxis
               tickLine={false}
@@ -170,6 +172,7 @@ export function ChartLineLinear({
             {/* Main data line */}
             <Line
               dataKey={yAxisProps.dataKey}
+              name="Movement in mm: "
               type="natural"
               stroke={`hsl(var(--chart-2))`}
               strokeWidth={2}
@@ -205,8 +208,9 @@ export function ChartLineLinear({
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="text-muted-foreground leading-none">
-          Showing {mode === "movement" ? "delta movement" : "realtime depth"} for sensor{" "}
-          <strong>{selectedSensorId}</strong>.
+          Showing {mode === "movement" ? "delta movement" : "real-time depth"} for {" "}
+          <strong>{selectedSensorId}</strong>. The red line shows the threshold of 5mm movement, which leads to a warning.
+           {mode === "movement" ? "" : " The black line indicates the original placement depth of the sensor."}
         </div>
       </CardFooter>
     </Card>
