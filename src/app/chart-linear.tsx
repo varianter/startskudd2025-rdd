@@ -84,7 +84,7 @@ export function ChartLineLinear({
         }
       : {
           dataKey: "realtimeDepthInMeter",
-          yLabel: "Realtime depth (m)",
+          yLabel: "Real-time depth (m)",
           domain: ["auto", "auto"],
         }
 
@@ -126,7 +126,7 @@ export function ChartLineLinear({
               isActive={mode === "depth"}
               onClick={() => setMode("depth")}
             >
-              Realtime depth (m)
+              Real-time depth (m)
             </ToggleGroupItem>
           </ToggleGroup>
 
@@ -208,7 +208,7 @@ export function ChartLineLinear({
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="text-muted-foreground leading-none">
-          Showing {mode === "movement" ? "delta movement" : "realtime depth"} for {" "}
+          Showing {mode === "movement" ? "delta movement" : "real-time depth"} for {" "}
           <strong>{selectedSensorId}</strong>. The red line shows the threshold of 5mm movement, which leads to a warning.
            {mode === "movement" ? "" : " The black line indicates the original placement depth of the sensor."}
         </div>
