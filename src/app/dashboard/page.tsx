@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Typography from "@/components/ui/typography";
 import { useQuery } from "@tanstack/react-query";
 import { SensorDocument } from "@/types/elastic";
+import { connect, getConnectionInfo } from "@/elastic";
+import { ChartLineLinear } from "../chart-linear";
 import { SensorTable } from "@/components/sensor";
 import RockSlideDetection from "@/components/detection";
 
@@ -31,7 +33,7 @@ export default function Dashboard() {
     refetchInterval: 60_000,
   });
 
-  const { data: recentData, isPending: isRecentLoading } = useQuery<{ recentReadings: SensorDocument[] }>({
+  const { data: recentData, isPending: isRecentLoading } = useQuery<{ recentReadings: Record<string, SensorDocument[]> }>({
     queryKey: ["recentReadings"],
     queryFn: () => fetch("/api/sensor-data/recent").then(r => r.json()),
     refetchInterval: 5_000,
@@ -62,6 +64,11 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
+      </div>
+      <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
+        {isConnected ? 
+        <ChartLineLinear sensordata={recentData?.recentReadings ?? {}} />
+         : <p>Not connected</p>}
       </div>
     </main>
   );
