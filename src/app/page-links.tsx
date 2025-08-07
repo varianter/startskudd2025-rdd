@@ -20,7 +20,7 @@ export default function Links() {
 
   return (
     <>
-      <Link {...hrefActive(null)}>Home</Link>
+      <Link {...hrefActive(null)}>Contact</Link>
       <Link {...hrefActive("dashboard")}>Dashboard</Link>
       {/*<Link {...hrefActive("reports")}>Reports</Link>*/}
     </>
