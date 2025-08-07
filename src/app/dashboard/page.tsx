@@ -41,24 +41,27 @@ export default function Dashboard() {
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
       <Typography variant="h1">Dashboard</Typography>
 
+      <div>
+        {rockslideData && sensors && <RockSlideDetection rockslideData={rockslideData} sensorCount={sensors.length}/>}
+      </div>
+
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
-        <Card x-chunk="dashboard-01-chunk-5">
-          <CardHeader>
-            <CardTitle className="gap-2 flex">
-              Sensors
-              {isSensorsFetching && <Badge variant="secondary">Updating...</Badge>}
-              {isError && <Badge variant="destructive">Error fetching data</Badge>}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-8">
-            {isConnected
-              ? <>
-                <RockSlideDetection rockslideData={rockslideData}/>
-                <SensorTable sensors={sensors}/>
-              </>
-              : <p>Not connected</p>}
-          </CardContent>
-        </Card>
+        <div className="flex flex-col gap-4">
+          <Card x-chunk="dashboard-01-chunk-5">
+            <CardHeader>
+              <CardTitle className="gap-2 flex">
+                Sensors
+                {isSensorsFetching && <Badge variant="secondary">Updating...</Badge>}
+                {isError && <Badge variant="destructive">Error fetching data</Badge>}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-8">
+              {isConnected
+                ? <SensorTable sensors={sensors}/>
+                : <p>Not connected</p>}
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </main>
   );

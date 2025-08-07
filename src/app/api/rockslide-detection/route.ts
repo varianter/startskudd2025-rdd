@@ -44,7 +44,7 @@ export async function GET() {
     },
     aggs: {
       sensors: {
-        terms: { field: "sensorId", size: 20 },
+        terms: { field: "sensorId", size: 1000 },
         aggs: {
           hits_count: { value_count: { field: "sensorId" } },
           only_danger: {
