@@ -45,21 +45,21 @@ export default function PageHeader() {
           </nav>
         </SheetContent>
       </Sheet>
-      <div className="flex w-full items-center justify-end gap-4 md:ml-auto md:gap-2 lg:gap-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="secondary" size="icon" className="rounded-full">
-              <CircleUser className="h-5 w-5" />
-              <span className="sr-only">Toggle user menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Support</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Login</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      {/*<div className="flex w-full items-center justify-end gap-4 md:ml-auto md:gap-2 lg:gap-4">*/}
+      {/*  <DropdownMenu>*/}
+      {/*    <DropdownMenuTrigger asChild>*/}
+      {/*      <Button variant="secondary" size="icon" className="rounded-full">*/}
+      {/*        <CircleUser className="h-5 w-5" />*/}
+      {/*        <span className="sr-only">Toggle user menu</span>*/}
+      {/*      </Button>*/}
+      {/*    </DropdownMenuTrigger>*/}
+      {/*    <DropdownMenuContent align="end">*/}
+      {/*      <DropdownMenuItem>Support</DropdownMenuItem>*/}
+      {/*      <DropdownMenuSeparator />*/}
+      {/*      <DropdownMenuItem>Login</DropdownMenuItem>*/}
+      {/*    </DropdownMenuContent>*/}
+      {/*  </DropdownMenu>*/}
+      {/*</div>*/}
     </header>
   );
 }

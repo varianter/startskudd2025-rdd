@@ -38,7 +38,7 @@ export async function GET() {
           },
 
           // movement threshold
-          { range: { deltaMovementInMm: { gt: 1.0 } } }, // TODO: Set to 5.0
+          { range: { deltaMovementInMm: { gt: 5.0 } } },
         ]
       }
     },
