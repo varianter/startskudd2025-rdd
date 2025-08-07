@@ -22,7 +22,7 @@ export async function GET() {
         }
       },
       sort: [
-        { readingDate: { order: "desc" } }
+        { readingDate: { order: "asc" } }
       ]
     });
 
