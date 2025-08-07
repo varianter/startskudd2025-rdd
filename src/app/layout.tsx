@@ -42,7 +42,7 @@ export default function RootLayout({
           <footer>
             <hr className="border-slate-300 sm:mx-auto dark:border-gray-700 lg:my-8" />
             <span className="block p-8 text-sm text-gray-500 sm:text-center dark:text-gray-400">
-              © 2024{" "}
+              © {new Date().getFullYear()}{" "}
               <a href="https://rigidbauta.no/" className="hover:underline">
                 Rigid Bauta AS
               </a>
