@@ -31,6 +31,12 @@ export default function Dashboard() {
     refetchInterval: 60_000,
   });
 
+  const { data: recentData, isPending: isRecentLoading } = useQuery<{ recentReadings: SensorDocument[] }>({
+    queryKey: ["recentReadings"],
+    queryFn: () => fetch("/api/sensor-data/recent").then(r => r.json()),
+    refetchInterval: 5_000,
+  });
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
       <Typography variant="h1">Dashboard</Typography>
