@@ -59,7 +59,7 @@ export function ChartLineLinear({
   const chartData = history.map((d) => ({
     readingDate: d.readingDate,
     deltaMovementInMm: d.deltaMovementInMm,
-    realtimeDepthInMeter: d.readingPlacement.depthInMeter,
+    realtimeDepthInMeter: d.readingPlacement?.depthInMeter,
   }))
 
   // Get dynamic bounds from the green line (main measurement)
